@@ -61,22 +61,31 @@ class ProductController extends Controller
     public function edit(ProductCreateRequest $request, $id)
     {
     	$data = $request->validated();
+
     	// Find product and merge request with model
     	$product = Product::findOrFail($id);
     	$product->update($data);
 
-		return response()->json($product, 202);
-    }
+    	// Updating product categories by removing any category
+    	// that is not in the current list to be updated
+    	$categories = $product->categories()->get();
+    	foreach ($categories as $category) {
+    		if (!in_array($category->name, $data['category'])) {
+    			$category->delete();
+    		} else {
+    			// Remove from the array of categories to 
+    			// be updated, so we can create next
+    			$key = array_search($category->name, $data['category']);
+    			unset($data['category'][$key]);
+    		}
+    	}
 
-    /*
-	 * Bonus: update all attributes at once (replace)
-     */
-    public function replace(ProductCreateRequest $request, $id)
-    {
-    	$data = $request->validated();
-    	// Find product and merge request with model
-    	$product = Product::findOrFail($id);
-    	$product->update($data);
+    	// Creating only the categories that doesn't exist
+    	foreach ($data['category'] as $name) {
+    		$category = new ProductCategory();
+    		$category->name = $name;
+    		$product->categories()->save($category);
+    	}
 
 		return response()->json($product, 202);
     }
