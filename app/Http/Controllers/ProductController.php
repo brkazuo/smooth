@@ -16,7 +16,7 @@ class ProductController extends Controller
     public function list($id = null) 
     {
     	if ($id) {
-    		$result = Product::find($id)->with('categories')->get();
+    		$result = Product::where('id', $id)->with('categories')->first();
     	} else {
     		$result = Product::with('categories')->get();
     	}
@@ -43,6 +43,20 @@ class ProductController extends Controller
 
     	return response()->json($product, 201);
 
+    }
+
+    /*
+	 * Deletes a product by ID
+     */
+    public function delete($id)
+    {
+    	$product = Product::find($id);
+    	if (!$product) {
+    		abort(404, "Product not found");
+    	}
+
+		$product->delete();
+		return response()->json($product, 200);
     }
 
 }

@@ -89,14 +89,13 @@ class Handler extends ExceptionHandler
                 $response['message'] = 'Forbidden';
                 break;
             case 404:
-                $response['message'] = 'Not Found';
+                $response['message'] = $exception->getMessage();
                 break;
             case 405:
                 $response['message'] = 'Method Not Allowed';
                 break;
             case 422:
-                $response['message'] = $exception->original['message'];
-                $response['errors'] = $exception->original['errors'];
+                $response['message'] = $exception->getMessage();
                 break;
             default:
                 $response['message'] = ($statusCode == 500) ? 'Whoops, looks like something went wrong' : $exception->getMessage();
