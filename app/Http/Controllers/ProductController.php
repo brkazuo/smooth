@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductCreateRequest;
+use App\Http\Requests\ProductEditRequest;
 use Illuminate\Http\Request;
 use App\Model\Product;
 use App\Model\ProductCategory;
@@ -58,7 +59,7 @@ class ProductController extends Controller
     /*
 	 * Bonus: update one or more attributes of a product at once
      */
-    public function edit(ProductCreateRequest $request, $id)
+    public function edit(ProductEditRequest $request, $id)
     {
     	$data = $request->validated();
 
