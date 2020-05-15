@@ -17,4 +17,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('product/{id?}', 'ProductController@list');
 Route::post('product', 'ProductController@create');
 Route::delete('product/{id}', 'ProductController@delete');
+Route::put('product/{id}', 'ProductController@edit');
 Route::get('category', 'ProductCategoryController@all');

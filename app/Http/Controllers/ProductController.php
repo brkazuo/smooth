@@ -42,7 +42,6 @@ class ProductController extends Controller
     	}
 
     	return response()->json($product, 201);
-
     }
 
     /*
@@ -50,13 +49,35 @@ class ProductController extends Controller
      */
     public function delete($id)
     {
-    	$product = Product::find($id);
-    	if (!$product) {
-    		abort(404, "Product not found");
-    	}
-
+    	$product = Product::findOrFail($id);
 		$product->delete();
+
 		return response()->json($product, 200);
     }
 
+    /*
+	 * Bonus: update one or more attributes of a product at once
+     */
+    public function edit(ProductCreateRequest $request, $id)
+    {
+    	$data = $request->validated();
+    	// Find product and merge request with model
+    	$product = Product::findOrFail($id);
+    	$product->update($data);
+
+		return response()->json($product, 202);
+    }
+
+    /*
+	 * Bonus: update all attributes at once (replace)
+     */
+    public function replace(ProductCreateRequest $request, $id)
+    {
+    	$data = $request->validated();
+    	// Find product and merge request with model
+    	$product = Product::findOrFail($id);
+    	$product->update($data);
+
+		return response()->json($product, 202);
+    }
 }
